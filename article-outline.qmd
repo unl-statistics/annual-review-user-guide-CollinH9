@@ -1,0 +1,9 @@
+## Introduction
+-Introduces animal tracking data and its importance
+-Describes the need for statistical models given the abundance of data being collected
+-Outlines sections 2-5 
+
+## Measurements Useful for Tracking and Modeling Animal Movement
+-Discusses methods for collecting different types of movement data
+### Position
+-
