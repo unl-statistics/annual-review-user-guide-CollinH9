@@ -2,6 +2,15 @@
 
 This user guide focuses on the use of hidden Markov models (HMMs) for analyzing animal tracking data. HMMs are commonly used to predict unobserved behaviors, like foraging, traveling, or resting, from observed movement data.
 
-The scope of this guide is limited to a conceptual overview of how HMMs are applied to animal tracking data and how their outputs are interpreted. It assumes basic knowledge in statistics and R, but won't directly cover the mathematics and proceses of HMMs.
+The scope of this guide is limited to a conceptual overview of how HMMs are applied to animal tracking data and how their outputs are interpreted. It assumes basic knowledge in statistics and R, but won't directly cover the mathematics and processes of HMMs.
 
 
+
+
+::: callout-note
+# Comments/suggestions
+
+Ok, I think that's reasonable. You may want to find an R package that allows you to fit such models without going into the math - it will probably make your life easier to demonstrate how to do the input and interpret the output if you have a specific package that will handle the math details. 
+
+
+:::
