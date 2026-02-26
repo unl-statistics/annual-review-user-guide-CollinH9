@@ -5,19 +5,33 @@ Here are some questions to guide you through the process of doing a task analysi
 
 What are the prerequisites, for both knowledge and e.g. software setup? 
 
+- Knowledge of R
+- Installed HMM package
+- Animal tracking data
+
+
 What are the basic requirements for any data that the method is used on? 
-  - Are missing values allowed? 
-  - Should the data be confined within a certain range? 
-  - Does the data have to be approximately normally distributed? 
+  - Generally no missing data
+  - Should be ordered in time
 
 What are the basic components of the task?
-  - Outline these in a bit more detail
 
+1. Import and clean tracking data  
+2. Calculate step lengths and turning angles  
+3. Choose the number of hidden states  
+4. Fit the HMM  
+5. Interpret state estimates and transition probabilities  
 
 What decisions does the user need to be prepared to make on the fly?
 
+- How many hidden states to use
+- Whether the results make biological sense
+
 What questions should the user ask of the "first draft" of the product? What adjustments may need to be made?
 
+- Did the model converge?
+- Do the states correspond to realistic behaviors?
+- Would a different number of states improve the model?
 
 ## Additional Guidance 
 

@@ -2,8 +2,20 @@
 
 What does someone trying to accomplish your chosen task need help with? 
 
+Someone trying to use HMMs for animal tracking data would probably need a way to understand what HMMs and and how to apply them to R
+
 What parts are likely to be tricky? 
 
+- Understanding hidden states
+- Choosing the amount of states
+- Interpreting the output
+- Preparing the movement data
+
+
 What resources are already available on this topic that may be helpful? Look for e.g. software vignettes, package documentation, papers about software packages, and so on.
+
+- R package documentation like `moveHMM` or `momentuHMM`
+- Help files in R
+- Package vignettes
 
 
