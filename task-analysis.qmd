@@ -14,6 +14,12 @@ What are the basic requirements for any data that the method is used on?
   - Generally no missing data
   - Should be ordered in time
 
+::: callout-note
+
+Ok, so what variables does animal tracking data have? Do you need lat/long and time? In what format? What does animal tracking data look like for the specific types of models you're considering?
+
+:::
+
 What are the basic components of the task?
 
 1. Import and clean tracking data  

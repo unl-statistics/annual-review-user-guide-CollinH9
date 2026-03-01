@@ -18,4 +18,10 @@ What resources are already available on this topic that may be helpful? Look for
 - Help files in R
 - Package vignettes
 
+::: callout-note
+
+I'd expect you to have read the vignettes and identified which ones are helpful for each of the tricky parts.
+
+:::
+
 
