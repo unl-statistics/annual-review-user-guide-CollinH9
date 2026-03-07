@@ -1,0 +1,125 @@
+[
+  {
+    "objectID": "guide.html",
+    "href": "guide.html",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "",
+    "text": "1.1 Prerequisites\nHidden Markov Models (HMMs) are commonly used to analyze animal movement data. In many tracking datasets we observe locations over time, but we do not directly observe the behavior of the animal. HMMs let researchers infer hidden behavior states like resting, traveling, or foraging based on movement patterns. This guide explains the basic idea behind fitting an HMM to tracking data using R and interpreting the results.\nBefore following this guide, users should:",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#prerequisites",
+    "href": "guide.html#prerequisites",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "",
+    "text": "Have basic knowledge of R and RStudio\nInstall the “moveHMM” package\nHave tracking data with coordinates and timestamps\nUnderstand basic statistical concepts such as probability distributions",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#required-data",
+    "href": "guide.html#required-data",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "1.2 Required Data",
+    "text": "1.2 Required Data\nTo apply an HMM to movement data, the dataset should include:\n\nAnimal location coordinates (latitude and longitude)\nTimestamps for each observation\nObservations ordered in time\n\nFrom these values we can find:\n\nStep length (distance between consecutive locations)\nTurning angle (change in movement direction)\n\nThese variables are commonly used as the observed data in animal movement HMMs.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#software-setup",
+    "href": "guide.html#software-setup",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "1.3 Software Setup",
+    "text": "1.3 Software Setup\nThere are multiple R packages that can fit HMMs for movement data. One that is commonly used is the moveHMM package Théo Michelot, Langrock, and Patterson (2016).\nTo install and load the package and its dependencies:\ninstall.packages(\"CircStats\")\ninstall.packages(\"moveHMM\")\nlibrary(moveHMM)\nWe can then load our library and some of its example data:\n\nlibrary(moveHMM)\n\nWarning: package 'moveHMM' was built under R version 4.3.3\n\n\nLoading required package: CircStats\n\n\nLoading required package: MASS\n\n\nLoading required package: boot\n\ndata(\"elk_data\")\n\nhead(elk_data)\n\n       ID Easting Northing dist_water\n1 elk-115  769928  4992847     200.00\n2 elk-115  766875  4997444     600.52\n3 elk-115  765949  4998516     561.81\n4 elk-115  765938  4998277     550.00\n5 elk-115  766275  4998005     302.08\n6 elk-115  766368  4998051     213.60",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#preparing-the-data",
+    "href": "guide.html#preparing-the-data",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "1.4 Preparing the Data",
+    "text": "1.4 Preparing the Data\nAfter loading the data, the prepData() function in the package can calculate step lengths and turning angles from the data using type = “UTM” since we have Easting/Northing data rather than Latitude/Longitude:\n\ndata &lt;- prepData(elk_data, type=\"UTM\", coordNames=c(\"Easting\",\"Northing\"))\nplot(data,compact=T)",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#fitting-the-model",
+    "href": "guide.html#fitting-the-model",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "1.5 Fitting the Model",
+    "text": "1.5 Fitting the Model\nNext, choose the number of hidden states in the model. For example, a basic model might include two states:\n\nTraveling\nForaging\n\nIt can then be fit using the fitHMM() function. The function estimates the movement characteristics associated with each hidden state and the probabilities of switching between states:\n\nmu0 &lt;- c(50, 300) # step mean (two parameters: one for each state)\nsigma0 &lt;- c(50,200) # step SD\nzeromass0 &lt;- c(0.1,0.01) # step zero-mass\nstepPar0 &lt;- c(mu0,sigma0,zeromass0)\n\nangleMean0 &lt;- c(pi,0) # angle mean\nkappa0 &lt;- c(0.5,2) # angle concentration\nanglePar0 &lt;- c(angleMean0,kappa0)\n\nmodel &lt;- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,\nanglePar0=anglePar0)\n\nNotice we chose some initial parameters based on moveHMM’s documentation Theo Michelot, Langrock, and Patterson (2025).",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#interpreting-the-results",
+    "href": "guide.html#interpreting-the-results",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "1.6 Interpreting the Results",
+    "text": "1.6 Interpreting the Results\nAfter fitting the model, the output will have estimates for the parameters associated with each state and the probabilities of transitioning between them.\nWe can also plot our model to view for a more straightforward summary of our results:\n\nplot(model)\n\nDecoding states sequence... DONE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe plots display the estimated step-length and turning-angle distributions for each hidden state, along with the probabilities of transitioning between states. These visualizations help identify movement patterns associated with different behaviors.\nResearchers can examine these results to interpret animal behavior. For example, a state associated with longer step lengths and straighter movement may represent traveling, while shorter step lengths and more turning may be foraging.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "guide.html#limitations",
+    "href": "guide.html#limitations",
+    "title": "1  Using Hidden Markov Models for Animal Tracking",
+    "section": "1.7 Limitations",
+    "text": "1.7 Limitations\nThe results of an HMM depend on assumptions such as the number of states and the distributions used to model the data. Because of this, it is important to check whether the chosen states make sense and to compare alternative specifications if possible.\n\n\n\n\nMichelot, Theo, Roland Langrock, and Toby Patterson. 2025. “moveHMM: An R Package for the Analysis of Animal Movement Data,” October.\n\n\nMichelot, Théo, Roland Langrock, and Toby A. Patterson. 2016. “moveHMM: An r Package for the Statistical Modelling of Animal Movement Data Using Hidden Markov Models.” Methods in Ecology and Evolution.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Using Hidden Markov Models for Animal Tracking</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Michelot, Theo, Roland Langrock, and Toby Patterson. 2025. “moveHMM: An R Package for the\nAnalysis of Animal Movement Data,” October.\n\n\nMichelot, Théo, Roland Langrock, and Toby A. Patterson. 2016.\n“moveHMM: An r Package for the Statistical Modelling of Animal\nMovement Data Using Hidden Markov Models.” Methods in Ecology\nand Evolution.",
+    "crumbs": [
+      "References"
+    ]
+  },
+  {
+    "objectID": "topic.html",
+    "href": "topic.html",
+    "title": "Appendix A — Topic",
+    "section": "",
+    "text": "This user guide focuses on the use of hidden Markov models (HMMs) for analyzing animal tracking data. HMMs are commonly used to predict unobserved behaviors, like foraging, traveling, or resting, from observed movement data.\nThe scope of this guide is limited to a conceptual overview of how HMMs are applied to animal tracking data and how their outputs are interpreted. It assumes basic knowledge in statistics and R, but won’t directly cover the mathematics and processes of HMMs.\n\n\n\n\n\n\nNoteComments/suggestions\n\n\n\nOk, I think that’s reasonable. You may want to find an R package that allows you to fit such models without going into the math - it will probably make your life easier to demonstrate how to do the input and interpret the output if you have a specific package that will handle the math details.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Topic</span>"
+    ]
+  },
+  {
+    "objectID": "needs.html",
+    "href": "needs.html",
+    "title": "Appendix B — Needs Assessment",
+    "section": "",
+    "text": "What does someone trying to accomplish your chosen task need help with?\nSomeone trying to use HMMs for animal tracking data would probably need a way to understand what HMMs and and how to apply them to R\nWhat parts are likely to be tricky?\n\nUnderstanding hidden states\nChoosing the amount of states\nInterpreting the output\nPreparing the movement data\n\nWhat resources are already available on this topic that may be helpful? Look for e.g. software vignettes, package documentation, papers about software packages, and so on.\n\nR package documentation like moveHMM or momentuHMM\nHelp files in R\nPackage vignettes\n\n\n\n\n\n\n\nNote\n\n\n\nI’d expect you to have read the vignettes and identified which ones are helpful for each of the tricky parts.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Needs Assessment</span>"
+    ]
+  },
+  {
+    "objectID": "task-analysis.html",
+    "href": "task-analysis.html",
+    "title": "Appendix C — Task Analysis",
+    "section": "",
+    "text": "C.1 Additional Guidance\nHere are some questions to guide you through the process of doing a task analysis. You don’t have to specifically answer each one of these (and some may not apply), but they should get you started thinking in the right direction.\nWhat are the prerequisites, for both knowledge and e.g. software setup?\nWhat are the basic requirements for any data that the method is used on? - Generally no missing data - Should be ordered in time\nWhat are the basic components of the task?\nWhat decisions does the user need to be prepared to make on the fly?\nWhat questions should the user ask of the “first draft” of the product? What adjustments may need to be made?\nYour check-in should answer these basic questions (and similar concerns that apply more directly to your topic).\nOnce you’ve completed the check-in, you can use this section to jump-start an introduction/set-up/getting started section in your user guide. This document should remain as an appendix to your main report.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>C</span>  <span class='chapter-title'>Task Analysis</span>"
+    ]
+  }
+]

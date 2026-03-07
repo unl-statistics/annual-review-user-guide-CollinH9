@@ -1,5 +1,102 @@
-# User Guide
+# Using Hidden Markov Models for Animal Tracking
 
-First off, you should change this section title to something more appropriate.
+Hidden Markov Models (HMMs) are commonly used to analyze animal movement data. In many tracking datasets we observe locations over time, but we do not directly observe the behavior of the animal. HMMs let researchers infer hidden behavior states like resting, traveling, or foraging based on movement patterns. This guide explains the basic idea behind fitting an HMM to tracking data using R and interpreting the results.
 
-Next, well, that's up to you. Good luck!
+## Prerequisites
+Before following this guide, users should:
+
+- Have basic knowledge of R and RStudio
+- Install the "moveHMM" package
+- Have tracking data with coordinates and timestamps
+- Understand basic statistical concepts such as probability distributions
+
+## Required Data
+
+To apply an HMM to movement data, the dataset should include:
+
+- Animal location coordinates (latitude and longitude)
+- Timestamps for each observation
+- Observations ordered in time
+
+From these values we can find:
+
+- **Step length** (distance between consecutive locations)
+- **Turning angle** (change in movement direction)
+
+These variables are commonly used as the observed data in animal movement HMMs.
+
+## Software Setup
+
+There are multiple R packages that can fit HMMs for movement data. One that is commonly used is the `moveHMM` package @michelotMoveHMM2016.
+
+To install and load the package and its dependencies:
+
+```r
+install.packages("CircStats")
+install.packages("moveHMM")
+library(moveHMM)
+```
+
+We can then load our library and some of its example data:
+
+```{r}
+library(moveHMM)
+
+data("elk_data")
+
+head(elk_data)
+```
+
+## Preparing the Data
+
+After loading the data, the `prepData()` function in the package can calculate step lengths and turning angles from the data using type = "UTM" since we have Easting/Northing data rather than Latitude/Longitude:
+
+```{r}
+data <- prepData(elk_data, type="UTM", coordNames=c("Easting","Northing"))
+plot(data,compact=T)
+```
+
+## Fitting the Model
+
+Next, choose the number of hidden states in the model. 
+For example, a basic model might include two states:
+
+- Traveling
+- Foraging
+
+It can then be fit using the `fitHMM()` function. The function estimates the movement characteristics associated with each hidden state and the probabilities of switching between states:
+
+```{r}
+mu0 <- c(50, 300) # step mean (two parameters: one for each state)
+sigma0 <- c(50,200) # step SD
+zeromass0 <- c(0.1,0.01) # step zero-mass
+stepPar0 <- c(mu0,sigma0,zeromass0)
+
+angleMean0 <- c(pi,0) # angle mean
+kappa0 <- c(0.5,2) # angle concentration
+anglePar0 <- c(angleMean0,kappa0)
+
+model <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,
+anglePar0=anglePar0)
+```
+
+Notice we chose some initial parameters based on moveHMM's documentation @michelotMoveHMMPackageAnalysis. 
+
+## Interpreting the Results
+
+After fitting the model, the output will have estimates for the parameters associated with each state and the probabilities of transitioning between them.
+
+We can also plot our model to view for a more straightforward summary of our results:
+
+```{r}
+plot(model)
+```
+
+The plots display the estimated step-length and turning-angle distributions for each hidden state, along with the probabilities of transitioning between states. These visualizations help identify movement patterns associated with different behaviors.
+
+Researchers can examine these results to interpret animal behavior. For example, a state associated with longer step lengths and straighter movement may represent traveling, while shorter step lengths and more turning may be foraging.
+
+## Limitations
+
+The results of an HMM depend on assumptions such as the number of states and the distributions used to model the data. 
+Because of this, it is important to check whether the chosen states make sense and to compare alternative specifications if possible.
