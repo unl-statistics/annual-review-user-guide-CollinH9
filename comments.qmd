@@ -1,0 +1,26 @@
+# Collin
+
+- need to move index.qmd to index-old.qmd and then rename topic.qmd as index.qmd-- gets rid of the manual instructions
+- Then, split the HMM info into separate files by chapter (# header) so that the TOC looks right.
+
+- 1.2 It might be good to clarify that these data  points are not necessarily literal steps. They can be hourly observations, observations at a certain spatial resolution, etc. depending on how the data is recorded.
+
+- 1.1 - I don't think you should single out the moveHMM package if you're also using CircStats -- just install both of them in the setup section. :)
+
+- 1.4 - it might be helpful to link to something that explains lat/long vs. easting/northing, because ugh that stuff makes me crazy and it's always in the wrong format for what you need.
+
+- 1.4 - it's probably a good idea to print out graphs for only 1-2 animals, or to make a facetted plot using ggplot2 rather than the default plots that are not particularly attractive. Of course, you could also pretty easily turn the first figure into a rug plot showing the individual x and y distributions along with the animal's location, if you used ggplot2 to make something custom.
+
+- 1.5 "It can then be fit" -- you want to replace It with "This simple model" to be a bit more specific, since users might look away from things after the bullets and then not quite know what it means.
+
+- 1.5 - you need a parenthetical citation here. Your bib entry should include a URL so that someone can link to the package on CRAN or github and easily find the vignettes.
+
+- 1.6 - figure out how to get only the plot you want to discuss. For each plot, explain what it tells you and how the user should interpret it in the context of the example data. Each plot should have a figure label (Fig x) and a caption, and then should be referenced in the text as you explain what plots should be used for each task. When would you know that the model didn't converge or fit well? What diagnostics are there in the model/package? You really need to put a lot more effort in here.
+
+- 1.7 - the number of states is an important parameter -- can you provide some guidance on how to determine that? What about distributions -- what options are available? How would someone decide to use a non-normal distribution? What distributions are used by default -- I can't imagine a -pi < x < pi domain would be modelled with a standard normal -- it should be using some sort of circular distribution that wraps around so that 0 and 2pi are the same angle with the same probability.
+
+- No section for "learn more/additional resources"
+
+- In general, I think you've shown a *very* basic example and you haven't done much to dig into the results or show what can be done with the results. There's minimal interpretation of what the results mean, and you're using default plots -- and not even managing to show them one at a time. Given that you're also using package data, this is extremely minimal and a subset of even the most basic package vignette/demo that is likely to already exist.
+
+
